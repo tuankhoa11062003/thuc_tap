@@ -5,17 +5,14 @@ from selenium.webdriver.chrome.options import Options
 import pandas as pd
 import time
 
-# Cấu hình trình duyệt (ẩn Chrome nếu muốn)
 options = Options()
-options.add_argument('--headless')  # Bỏ dòng này nếu bạn muốn xem trình duyệt
+options.add_argument('--headless') 
 driver = webdriver.Chrome(service=Service(), options=options)
 
-# Truy cập trang tra cứu
 base_url = "https://thuvienphapluat.vn/ma-so-thue/tra-cuu-ma-so-thue-doanh-nghiep"
 driver.get(base_url)
 time.sleep(3)
 
-# Lưu trữ dữ liệu từng trang
 sheets = {}
 
 page_num = 1
@@ -38,7 +35,6 @@ while True:
 
     sheets[f"Trang_{page_num}"] = pd.DataFrame(data)
 
-    # Kiểm tra nút "Trang tiếp theo"
     try:
         next_button = driver.find_element(By.XPATH, '//a[contains(text(),"Sau")]')
         if 'disabled' in next_button.get_attribute('class'):
@@ -52,9 +48,6 @@ while True:
 
 driver.quit()
 
-# Ghi vào Excel
 with pd.ExcelWriter("ma_so_thue_doanh_nghiep.xlsx", engine='openpyxl') as writer:
     for sheet_name, df in sheets.items():
         df.to_excel(writer, sheet_name=sheet_name, index=False)
-
-print("✅ Đã lưu xong file Excel.")
