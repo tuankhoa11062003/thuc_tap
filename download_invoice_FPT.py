@@ -8,6 +8,7 @@ import pandas as pd
 from selenium.webdriver.chrome.options import Options
 import os
 import xml.etree.ElementTree as ET
+import xmltodict
 
 logging.basicConfig(
     filename='log_dow_flt.log',
@@ -58,6 +59,7 @@ def xu_ly_du_lieu_input(driver, ma, masothue, url):
         logging.info("Mã đã được nhập.")
     except Exception as e:
         logging.error("Lỗi khi nhập mã tra cứu: %s", str(e))
+        
 
 def xu_ly_tra_cuu(driver, url):
     try:
@@ -76,6 +78,7 @@ def xu_ly_tra_cuu(driver, url):
         logging.info("Tra cứu thành công.")
     except Exception as e:
         logging.error("Tra cứu không thành công")
+        
 
 def xu_ly_download(driver, url):
     try:
@@ -118,65 +121,49 @@ def xu_ly_download(driver, url):
     except Exception as e:
         logging.error("Lỗi khi tải xuống hóa đơn")
         
-def xu_ly_xuat_output(ma, masothue, url, output_file="output.xlsx", download_dir="E:\\download"):
-    latest_file = None
-    latest_time = 0
+        
+def xu_ly_xuat_output(ma, masothue, url,):
 
-    for file in os.listdir(download_dir):
-        if file.endswith(".xml"):
-            path = os.path.join(download_dir, file)
-            t = os.path.getmtime(path)
-            if t > latest_time:
-                latest_file = path
-                latest_time = t
+    folder_path = "E:\\download"  # Thư mục chứa các file XML
+    output_exl = "output.xlsx"  # Tên file Excel đầu ra
 
-    if latest_file:
-        try:
-            tree = ET.parse(latest_file)
-            root = tree.getroot()
+    # Tạo danh sách chứa dữ liệu
+    rows = []
 
-            def safe_find(xpath):
-                e = root.find(xpath)
-                return e.text.strip() if e is not None and e.text else ""
+    # Duyệt qua các file XML trong thư mục
+    for filename in os.listdir(folder_path):
+        if filename.endswith(".xml"):
+            file_path = os.path.join(folder_path, filename)
+            with open(file_path, 'r', encoding='utf-8') as file:
+                try:
+                    data = xmltodict.parse(file.read())
 
-            data = {
-                "Mã số thuế": masothue,
-                "Mã tra cứu": ma,
-                "URL": url,
-                "Số hóa đơn": safe_find(".//TTChung/SHDon"),
-                "Đơn vị bán hàng": safe_find(".//NDHDon/NBan/Ten"),
-                "Mã số thuế bán": safe_find(".//NDHDon/NBan/MST"),
-                "Địa chỉ bán": safe_find(".//NDHDon/NBan/DChi"),
-                "Số tài khoản bán": safe_find(".//NDHDon/NBan/STKNHang"),
-                "Họ tên người mua hàng": safe_find(".//NDHDon/NMua/Ten"),
-                "Địa chỉ mua": safe_find(".//NDHDon/NMua/DChi"),
-                "Mã số thuế mua": safe_find(".//NDHDon/NMua/MST")
-            }
+                    hdon = data['HDon']['DLHDon']
+                    ttchung = hdon['TTChung']
+                    nban = hdon['NDHDon']['NBan']
+                    nmua = hdon['NDHDon']['NMua']
 
-        except Exception as e:
-            logging.error(f"Lỗi khi đọc XML {latest_file}: {e}")
-            data = {
-                "Mã số thuế": masothue,
-                "Mã tra cứu": ma,
-                "URL": url,
-                "Lỗi": f"Lỗi đọc XML: {e}"
-            }
-    else:
-        data = {
-            "Mã số thuế": masothue,
-            "Mã tra cứu": ma,
-            "URL": url,
-            "Lỗi": "Không tải được XML"
-        }
+                    row = {
+                        "Mã số thuế": ttchung.get('MST', ''),
+                        "Mã tra cứu": ttchung.get('MCTT', ''),
+                        "URL": "",
+                        "Số hóa đơn": ttchung.get('SHDon', ''),
+                        "Đơn vị bán hàng": nban.get('Ten', ''),
+                        "Mã số thuế bán": nban.get('MST', ''),
+                        "Địa chỉ bán": nban.get('DChi', ''),
+                        "Số tài khoản bán": nban.get('STKNHang', ''),
+                        "Họ tên người mua hàng": nmua.get('Ten', ''),
+                        "Địa chỉ mua": nmua.get('DChi', ''),
+                        "Mã số thuế mua": nmua.get('MST', ''),
+                    }
 
-    try:
-        df = pd.read_excel(output_file) if os.path.exists(output_file) else pd.DataFrame()
-        df = pd.concat([df, pd.DataFrame([data])], ignore_index=True)
-        df.to_excel(output_file, index=False)
-    except Exception as e:
-        logging.error(f"Lỗi khi ghi output: {e}")
+                    rows.append(row)
 
+                except Exception as e:
+                    print(f"Lỗi khi xử lý file {filename}: {e}")
 
+    df = pd.DataFrame(rows)
+    df.to_excel(index=False, engine='openpyxl')
     
     
 def main():
