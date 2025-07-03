@@ -121,11 +121,7 @@ def xu_ly_download(driver, url):
         logging.error("Lỗi khi tải xuống hóa đơn")
 
 def xu_ly_xuat_output(ma, masothue, url):
-    input_data = {
-        "Mã số thuế": masothue,
-        "Mã tra cứu": ma,
-        "URL": url
-    }
+    
     folder_path = "E:\\download"
     output_exl = "output.xlsx"
     rows = []
@@ -142,8 +138,8 @@ def xu_ly_xuat_output(ma, masothue, url):
                             nmua = hdon['NDHDon']['NMua']
 
                             row = {
-                                "Mã số thuế": ttchung.get('MST', '').strip(),
-                                "Mã tra cứu":ttchung.get('MaTraCuu', '').strip(),
+                                "Mã số thuế": ttchung.get('MST', ''),
+                                "Mã tra cứu":ttchung.get('MaTraCuu', ''),
                                 "URL": "",
                                 "Số hóa đơn": ttchung.get('SHDon', ''),
                                 "Đơn vị bán hàng": nban.get('Ten', ''),
@@ -163,8 +159,8 @@ def xu_ly_xuat_output(ma, masothue, url):
                             nmua = hdon['NDHDon']['NMua']
 
                             row = {
-                                "Mã số thuế": ttchung.get('MST','').strip(),
-                                "Mã tra cứu": ttchung.get('MaTraCuu','').strip(),
+                                "Mã số thuế": ttchung.get('MST',''),
+                                "Mã tra cứu": ttchung.get('MaTraCuu',''),
                                 "URL": "",
                                 "Số hóa đơn": ttchung.get('SHDon', ''),
                                 "Đơn vị bán hàng": nban.get('Ten', ''),
@@ -172,20 +168,17 @@ def xu_ly_xuat_output(ma, masothue, url):
                                 "Địa chỉ bán": nban.get('DChi', ''),
                                 "Số tài khoản bán": nban.get('STKNHang', ''),
                                 "Họ tên người mua hàng": nmua.get('Ten', ''),
-                                "Địa chỉ mua": nmua.get('DChi', ''),
+                                "Địa chỉ mua": nmua.get('DChi', ''),-
                                 "Mã số thuế mua": nmua.get('MST', ''),
                             }
 
                             rows.append(row)
 
                     except Exception as e:
-                        print(f"Lỗi khi xử lý file {filename}: {e}")
-
-            if rows:
+                        logging.error(f"Lỗi khi xử lý file {filename}: {str(e)}")
+                        continue
                 df = pd.DataFrame(rows)
                 df.to_excel(output_exl, index=False, engine='openpyxl')
-            else:
-                print("Không có dữ liệu nào để ghi vào Excel.")
 
     
 def main():
