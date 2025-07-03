@@ -1,0 +1,156 @@
+2025-07-03 16:11:41,541 - INFO - Bắt đầu quá trình tải xuống hóa đơn.
+2025-07-03 16:11:45,085 - INFO - Đang xử lý mã: r08e17y79g
+2025-07-03 16:11:50,525 - INFO - Mã đã được nhập.
+2025-07-03 16:11:55,590 - INFO - Tra cứu thành công.
+2025-07-03 16:11:58,671 - INFO - Tải xuống hóa đơn thành công.
+2025-07-03 16:12:00,674 - INFO - Đang xử lý mã: r46jvxmvxg
+2025-07-03 16:12:01,868 - INFO - Mã đã được nhập.
+2025-07-03 16:12:06,940 - INFO - Tra cứu thành công.
+2025-07-03 16:12:10,002 - INFO - Tải xuống hóa đơn thành công.
+2025-07-03 16:12:12,003 - INFO - Đang xử lý mã: rzmwy1yo4g
+2025-07-03 16:12:13,282 - INFO - Mã đã được nhập.
+2025-07-03 16:12:18,349 - INFO - Tra cứu thành công.
+2025-07-03 16:12:21,421 - INFO - Tải xuống hóa đơn thành công.
+2025-07-03 16:12:23,423 - INFO - Đang xử lý mã: B1HEIRR8N0WP
+2025-07-03 16:12:25,533 - INFO - Mã đã được nhập.
+2025-07-03 16:12:31,039 - INFO - Tra cứu thành công.
+2025-07-03 16:12:41,274 - INFO - Tải xuống hóa đơn thành công.
+2025-07-03 16:12:43,275 - INFO - Đang xử lý mã: PZH_FWQ4BN3
+2025-07-03 16:12:44,058 - INFO - Mã đã được nhập.
+2025-07-03 16:12:49,283 - INFO - Tra cứu thành công.
+2025-07-03 16:12:54,306 - ERROR - Lỗi khi tải xuống hóa đơn
+2025-07-03 16:12:56,307 - INFO - Đang xử lý mã: VBHKSL682918
+2025-07-03 16:12:57,090 - INFO - Mã đã được nhập.
+2025-07-03 16:13:02,425 - INFO - Tra cứu thành công.
+2025-07-03 16:13:12,562 - INFO - Tải xuống hóa đơn thành công.
+2025-07-03 16:13:14,564 - INFO - Đang xử lý mã: NII30XVQWNC
+2025-07-03 16:13:17,761 - INFO - Mã đã được nhập.
+2025-07-03 16:13:24,559 - INFO - Tra cứu thành công.
+2025-07-03 16:13:31,056 - INFO - Tải xuống hóa đơn thành công.
+2025-07-03 16:13:33,057 - INFO - Đang xử lý mã: MHPLO8W6EMD
+2025-07-03 16:13:33,596 - INFO - Mã đã được nhập.
+2025-07-03 16:13:39,218 - INFO - Tra cứu thành công.
+2025-07-03 16:13:49,270 - ERROR - Lỗi khi tải xuống hóa đơn
+2025-07-03 16:13:51,273 - INFO - Đang xử lý mã: MIJ634K9JAD
+2025-07-03 16:13:52,211 - INFO - Mã đã được nhập.
+2025-07-03 16:13:58,325 - INFO - Tra cứu thành công.
+2025-07-03 16:14:05,158 - INFO - Tải xuống hóa đơn thành công.
+2025-07-03 16:14:09,716 - INFO - Quá trình tải xuống kết thúc.
+2025-07-03 16:14:10,024 - ERROR - Lỗi khi xử lý file 1C25THA_00000094_0301175691-036.xml: bad operand type for unary -: 'str'
+2025-07-03 16:14:10,041 - ERROR - Lỗi khi xử lý file 1C25TTV_00002426_0401281414.xml: bad operand type for unary -: 'str'
+2025-07-03 16:14:10,052 - ERROR - Lỗi khi xử lý file C25TKP-00004221-NII30XVQWNC-DPH.xml: bad operand type for unary -: 'str'
+2025-07-03 16:14:10,065 - ERROR - Lỗi khi xử lý file C25TKP-00004288-MIJ634K9JAD-DPH.xml: bad operand type for unary -: 'str'
+2025-07-03 16:17:10,335 - INFO - Bắt đầu quá trình tải xuống hóa đơn.
+2025-07-03 16:17:12,937 - INFO - Đang xử lý mã: r08e17y79g
+2025-07-03 16:17:15,887 - INFO - Mã đã được nhập.
+2025-07-03 16:17:20,960 - INFO - Tra cứu thành công.
+2025-07-03 16:17:24,021 - INFO - Tải xuống hóa đơn thành công.
+2025-07-03 16:17:26,023 - INFO - Đang xử lý mã: r46jvxmvxg
+2025-07-03 16:17:27,068 - INFO - Mã đã được nhập.
+2025-07-03 16:17:32,125 - INFO - Tra cứu thành công.
+2025-07-03 16:17:35,184 - INFO - Tải xuống hóa đơn thành công.
+2025-07-03 16:17:37,186 - INFO - Đang xử lý mã: rzmwy1yo4g
+2025-07-03 16:17:38,029 - INFO - Mã đã được nhập.
+2025-07-03 16:17:43,079 - INFO - Tra cứu thành công.
+2025-07-03 16:17:46,128 - INFO - Tải xuống hóa đơn thành công.
+2025-07-03 16:17:48,130 - INFO - Đang xử lý mã: B1HEIRR8N0WP
+2025-07-03 16:17:49,837 - INFO - Mã đã được nhập.
+2025-07-03 16:17:55,241 - INFO - Tra cứu thành công.
+2025-07-03 16:18:05,465 - INFO - Tải xuống hóa đơn thành công.
+2025-07-03 16:18:07,467 - INFO - Đang xử lý mã: PZH_FWQ4BN3
+2025-07-03 16:18:08,157 - INFO - Mã đã được nhập.
+2025-07-03 16:18:13,402 - INFO - Tra cứu thành công.
+2025-07-03 16:18:18,429 - ERROR - Lỗi khi tải xuống hóa đơn
+2025-07-03 16:18:20,429 - INFO - Đang xử lý mã: VBHKSL682918
+2025-07-03 16:18:21,190 - INFO - Mã đã được nhập.
+2025-07-03 16:18:26,606 - INFO - Tra cứu thành công.
+2025-07-03 16:18:36,761 - INFO - Tải xuống hóa đơn thành công.
+2025-07-03 16:18:38,762 - INFO - Đang xử lý mã: NII30XVQWNC
+2025-07-03 16:18:40,515 - INFO - Mã đã được nhập.
+2025-07-03 16:18:45,751 - INFO - Tra cứu thành công.
+2025-07-03 16:18:52,252 - INFO - Tải xuống hóa đơn thành công.
+2025-07-03 16:18:54,255 - INFO - Đang xử lý mã: MHPLO8W6EMD
+2025-07-03 16:18:54,806 - INFO - Mã đã được nhập.
+2025-07-03 16:19:00,272 - INFO - Tra cứu thành công.
+2025-07-03 16:19:10,529 - ERROR - Lỗi khi tải xuống hóa đơn
+2025-07-03 16:19:12,530 - INFO - Đang xử lý mã: MIJ634K9JAD
+2025-07-03 16:19:13,209 - INFO - Mã đã được nhập.
+2025-07-03 16:19:19,781 - INFO - Tra cứu thành công.
+2025-07-03 16:19:26,170 - INFO - Tải xuống hóa đơn thành công.
+2025-07-03 16:19:30,559 - INFO - Quá trình tải xuống kết thúc.
+2025-07-03 16:24:05,876 - INFO - Bắt đầu quá trình tải xuống hóa đơn.
+2025-07-03 16:24:08,599 - INFO - Đang xử lý mã: r08e17y79g
+2025-07-03 16:24:11,480 - INFO - Mã đã được nhập.
+2025-07-03 16:24:16,556 - INFO - Tra cứu thành công.
+2025-07-03 16:24:19,653 - INFO - Tải xuống hóa đơn thành công.
+2025-07-03 16:24:21,654 - INFO - Đang xử lý mã: r46jvxmvxg
+2025-07-03 16:24:23,006 - INFO - Mã đã được nhập.
+2025-07-03 16:24:28,064 - INFO - Tra cứu thành công.
+2025-07-03 16:24:31,114 - INFO - Tải xuống hóa đơn thành công.
+2025-07-03 16:24:33,117 - INFO - Đang xử lý mã: rzmwy1yo4g
+2025-07-03 16:24:34,044 - INFO - Mã đã được nhập.
+2025-07-03 16:24:39,090 - INFO - Tra cứu thành công.
+2025-07-03 16:24:42,132 - INFO - Tải xuống hóa đơn thành công.
+2025-07-03 16:24:44,135 - INFO - Đang xử lý mã: B1HEIRR8N0WP
+2025-07-03 16:24:45,870 - INFO - Mã đã được nhập.
+2025-07-03 16:24:51,238 - INFO - Tra cứu thành công.
+2025-07-03 16:25:01,413 - INFO - Tải xuống hóa đơn thành công.
+2025-07-03 16:25:03,415 - INFO - Đang xử lý mã: PZH_FWQ4BN3
+2025-07-03 16:25:04,624 - INFO - Mã đã được nhập.
+2025-07-03 16:25:09,831 - INFO - Tra cứu thành công.
+2025-07-03 16:25:14,850 - ERROR - Lỗi khi tải xuống hóa đơn
+2025-07-03 16:25:16,852 - INFO - Đang xử lý mã: VBHKSL682918
+2025-07-03 16:25:17,754 - INFO - Mã đã được nhập.
+2025-07-03 16:25:23,166 - INFO - Tra cứu thành công.
+2025-07-03 16:25:33,348 - INFO - Tải xuống hóa đơn thành công.
+2025-07-03 16:25:35,349 - INFO - Đang xử lý mã: NII30XVQWNC
+2025-07-03 16:25:38,190 - INFO - Mã đã được nhập.
+2025-07-03 16:25:44,561 - INFO - Tra cứu thành công.
+2025-07-03 16:25:50,977 - INFO - Tải xuống hóa đơn thành công.
+2025-07-03 16:25:52,980 - INFO - Đang xử lý mã: MHPLO8W6EMD
+2025-07-03 16:25:53,564 - INFO - Mã đã được nhập.
+2025-07-03 16:25:59,070 - INFO - Tra cứu thành công.
+2025-07-03 16:26:09,396 - ERROR - Lỗi khi tải xuống hóa đơn
+2025-07-03 16:26:11,396 - INFO - Đang xử lý mã: MIJ634K9JAD
+2025-07-03 16:26:11,931 - INFO - Mã đã được nhập.
+2025-07-03 16:26:17,970 - INFO - Tra cứu thành công.
+2025-07-03 16:26:24,329 - INFO - Tải xuống hóa đơn thành công.
+2025-07-03 16:26:28,883 - INFO - Quá trình tải xuống kết thúc.
+2025-07-03 16:27:19,918 - INFO - Bắt đầu quá trình tải xuống hóa đơn.
+2025-07-03 16:27:22,096 - INFO - Đang xử lý mã: r08e17y79g
+2025-07-03 16:27:25,090 - INFO - Mã đã được nhập.
+2025-07-03 16:27:30,147 - INFO - Tra cứu thành công.
+2025-07-03 16:27:33,194 - INFO - Tải xuống hóa đơn thành công.
+2025-07-03 16:27:35,196 - INFO - Đang xử lý mã: r46jvxmvxg
+2025-07-03 16:27:36,719 - INFO - Mã đã được nhập.
+2025-07-03 16:27:41,771 - INFO - Tra cứu thành công.
+2025-07-03 16:27:44,815 - INFO - Tải xuống hóa đơn thành công.
+2025-07-03 16:27:46,817 - INFO - Đang xử lý mã: rzmwy1yo4g
+2025-07-03 16:27:48,393 - INFO - Mã đã được nhập.
+2025-07-03 16:27:53,438 - INFO - Tra cứu thành công.
+2025-07-03 16:27:56,526 - INFO - Tải xuống hóa đơn thành công.
+2025-07-03 16:27:58,527 - INFO - Đang xử lý mã: B1HEIRR8N0WP
+2025-07-03 16:28:01,837 - INFO - Mã đã được nhập.
+2025-07-03 16:28:13,907 - INFO - Tra cứu thành công.
+2025-07-03 16:28:24,081 - INFO - Tải xuống hóa đơn thành công.
+2025-07-03 16:28:26,083 - INFO - Đang xử lý mã: PZH_FWQ4BN3
+2025-07-03 16:28:26,759 - INFO - Mã đã được nhập.
+2025-07-03 16:28:31,995 - INFO - Tra cứu thành công.
+2025-07-03 16:28:37,016 - ERROR - Lỗi khi tải xuống hóa đơn
+2025-07-03 16:28:39,019 - INFO - Đang xử lý mã: VBHKSL682918
+2025-07-03 16:28:49,446 - INFO - Mã đã được nhập.
+2025-07-03 16:28:54,929 - INFO - Tra cứu thành công.
+2025-07-03 16:29:05,080 - INFO - Tải xuống hóa đơn thành công.
+2025-07-03 16:29:07,081 - INFO - Đang xử lý mã: NII30XVQWNC
+2025-07-03 16:29:09,083 - INFO - Mã đã được nhập.
+2025-07-03 16:29:15,138 - INFO - Tra cứu thành công.
+2025-07-03 16:29:21,553 - INFO - Tải xuống hóa đơn thành công.
+2025-07-03 16:29:23,554 - INFO - Đang xử lý mã: MHPLO8W6EMD
+2025-07-03 16:29:24,263 - INFO - Mã đã được nhập.
+2025-07-03 16:29:29,764 - INFO - Tra cứu thành công.
+2025-07-03 16:29:39,994 - ERROR - Lỗi khi tải xuống hóa đơn
+2025-07-03 16:29:41,996 - INFO - Đang xử lý mã: MIJ634K9JAD
+2025-07-03 16:29:42,445 - INFO - Mã đã được nhập.
+2025-07-03 16:29:48,430 - INFO - Tra cứu thành công.
+2025-07-03 16:29:54,857 - INFO - Tải xuống hóa đơn thành công.
+2025-07-03 16:29:59,273 - INFO - Quá trình tải xuống kết thúc.

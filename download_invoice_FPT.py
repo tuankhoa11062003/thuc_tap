@@ -121,64 +121,60 @@ def xu_ly_download(driver, url):
         logging.error("Lỗi khi tải xuống hóa đơn")
 
 def xu_ly_xuat_output(ma, masothue, url):
-    
     folder_path = "E:\\download"
     output_exl = "output.xlsx"
     rows = []
+
     for filename in os.listdir(folder_path):
-            if filename.endswith(".xml"):
-                file_path = os.path.join(folder_path, filename)
-                with open(file_path, 'r', encoding='utf-8') as file:
-                    try:
-                        data = xmltodict.parse(file.read())
-                        if "TDiep" in data:
-                            hdon = data['TDiep']['DLieu']['HDon']['DLHDon']
-                            ttchung = hdon['TTChung']
-                            nban = hdon['NDHDon']['NBan']
-                            nmua = hdon['NDHDon']['NMua']
+        if filename.endswith(".xml") and ma in filename:
+            file_path = os.path.join(folder_path, filename)
 
-                            row = {
-                                "Mã số thuế": ttchung.get('MST', ''),
-                                "Mã tra cứu":ttchung.get('MaTraCuu', ''),
-                                "URL": "",
-                                "Số hóa đơn": ttchung.get('SHDon', ''),
-                                "Đơn vị bán hàng": nban.get('Ten', ''),
-                                "Mã số thuế bán": nban.get('MST', ''),
-                                "Địa chỉ bán": nban.get('DChi', ''),
-                                "Số tài khoản bán": nban.get('STKNHang', ''),
-                                "Họ tên người mua hàng": nmua.get('Ten', ''),
-                                "Địa chỉ mua": nmua.get('DChi', ''),
-                                "Mã số thuế mua": nmua.get('MST', ''),
-                            }
+            with open(file_path, 'r', encoding='utf-8') as file:
+                try:
+                    data = xmltodict.parse(file.read())
 
-                            rows.append(row)
-                        else:
-                            hdon = data['HDon']['DLHDon']
-                            ttchung = hdon['TTChung']
-                            nban = hdon['NDHDon']['NBan']
-                            nmua = hdon['NDHDon']['NMua']
+                    if "TDiep" in data:
+                        hdon = data['TDiep']['DLieu']['HDon']['DLHDon']
+                    else:
+                        hdon = data['HDon']['DLHDon']
 
-                            row = {
-                                "Mã số thuế": ttchung.get('MST',''),
-                                "Mã tra cứu": ttchung.get('MaTraCuu',''),
-                                "URL": "",
-                                "Số hóa đơn": ttchung.get('SHDon', ''),
-                                "Đơn vị bán hàng": nban.get('Ten', ''),
-                                "Mã số thuế bán": nban.get('MST', ''),
-                                "Địa chỉ bán": nban.get('DChi', ''),
-                                "Số tài khoản bán": nban.get('STKNHang', ''),
-                                "Họ tên người mua hàng": nmua.get('Ten', ''),
-                                "Địa chỉ mua": nmua.get('DChi', ''),-
-                                "Mã số thuế mua": nmua.get('MST', ''),
-                            }
+                    ttchung = hdon['TTChung']
+                    nban = hdon['NDHDon']['NBan']
+                    nmua = hdon['NDHDon']['NMua']
 
-                            rows.append(row)
+                    row = {
+                        "Mã số thuế": masothue,
+                        "Mã tra cứu": ma,
+                        "URL": url,
+                        "Số hóa đơn": ttchung.get('SHDon', ''),
+                        "Đơn vị bán hàng": nban.get('Ten', ''),
+                        "Mã số thuế bán": nban.get('MST', ''),
+                        "Địa chỉ bán": nban.get('DChi', ''),
+                        "Số tài khoản bán": nban.get('STKNHang', ''),
+                        "Họ tên người mua hàng": nmua.get('Ten', ''),
+                        "Địa chỉ mua": nmua.get('DChi', ''),
+                        "Mã số thuế mua": nmua.get('MST', ''),
+                    }
 
-                    except Exception as e:
-                        logging.error(f"Lỗi khi xử lý file {filename}: {str(e)}")
-                        continue
-                df = pd.DataFrame(rows)
-                df.to_excel(output_exl, index=False, engine='openpyxl')
+                    rows.append(row)
+
+                except Exception as e:
+                    logging.error(f"Lỗi xử lý file {filename}: {e}")
+                    continue
+
+    if rows:
+        df_new = pd.DataFrame(rows)
+
+        # Nếu file đã tồn tại -> đọc rồi nối thêm dòng
+        if os.path.exists(output_exl):
+            df_old = pd.read_excel(output_exl)
+            df_all = pd.concat([df_old, df_new], ignore_index=True)
+        else:
+            df_all = df_new
+
+        # Ghi lại
+        df_all.to_excel(output_exl, index=False, engine='openpyxl')
+
 
     
 def main():
@@ -202,12 +198,9 @@ def main():
             xu_ly_tra_cuu(driver, url)
             xu_ly_download(driver, url)
             time.sleep(2)
-
-            # Ghi dữ liệu sau mỗi lần xử lý
-            xu_ly_xuat_output(ma, masothue, url)
-
+            
     finally:
         driver.quit()
         logging.info("Quá trình tải xuống kết thúc.")
-
+        xu_ly_xuat_output(ma, masothue, url)
 main()
