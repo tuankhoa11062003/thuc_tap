@@ -1,16 +1,15 @@
 import os
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import xml.etree.ElementTree as ET
-from jinja2 import Template
-from weasyprint import HTML
 import time
 import logging
 import pandas as pd
+import xmltodict
+from selenium import webdriver
+from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
+# Thiết lập logging
 logging.basicConfig(
     filename='log_dow_flt.log',
     filemode='a',
@@ -19,202 +18,209 @@ logging.basicConfig(
     encoding='utf-8'
 )
 
+# Mở Chrome với cấu hình tải về
 def open_chrome(download_dir="E:\\download"):
     options = Options()
     prefs = {
         "download.default_directory": download_dir,
         "download.prompt_for_download": False,
         "download.directory_upgrade": True,
-        "plugins.always_open_pdf_externally": True,
         "profile.default_content_settings.popups": 0,
         "safebrowsing.enabled": True
     }
     options.add_experimental_option("prefs", prefs)
     return webdriver.Chrome(options=options)
 
-def xu_ly_du_lieu_input(driver, ma, masothue, url):
-    try:
-        driver.get(url)
-        if "meinvoice" in url:
-            input_element = driver.find_element(By.XPATH, '//*[@id="txtCode"]')
-            input_element.clear()
-            input_element.send_keys(ma)
+# Base class cho handler
+class BaseInvoiceHandler:
+    def __init__(self, driver, ma, masothue, url):
+        self.driver = driver
+        self.ma = ma
+        self.masothue = masothue
+        self.url = url
 
-        elif "tracuuhoadon.fpt" in url:
-            wait = WebDriverWait(driver, 10)
-            input_mst = wait.until(EC.presence_of_element_located((By.XPATH, '/html/body/div[3]/div/div/div[3]/div/div[1]/div/div[2]/div/input')))
-            input_mst.clear()
-            input_mst.send_keys(masothue)
+    def process(self):
+        self.driver.get(self.url)
+        self.input_data()
+        self.search()
+        self.download()
 
-            input_ma = wait.until(EC.presence_of_element_located((By.XPATH, '/html/body/div[3]/div/div/div[3]/div/div[1]/div/div[3]/div/input')))
-            input_ma.clear()
-            input_ma.send_keys(ma)
+    def input_data(self): pass
+    def search(self): pass
+    def download(self): pass
 
-        elif "van.ehoadon.vn" in url:
-            input_element = driver.find_element(By.XPATH, '//*[@id="txtInvoiceCode"]')
-            input_element.clear()
-            input_element.send_keys(ma)
+# Handler: meinvoice.vn
+class MeInvoiceHandler(BaseInvoiceHandler):
+    def input_data(self):
+        input_element = self.driver.find_element(By.XPATH, '//*[@id="txtCode"]')
+        input_element.clear()
+        input_element.send_keys(self.ma)
+        logging.info("Đã nhập mã meinvoice")
 
+    def search(self):
+        self.driver.find_element(By.XPATH, '//*[@id="btnSearchInvoice"]').click()
+        time.sleep(5)
+        logging.info("Tra cứu meinvoice thành công.")
+
+    def download(self):
+        time.sleep(5)
+        self.driver.find_element(By.XPATH, '//*[@id="popup-content-container"]/div[1]/div[2]/div[12]/div/span').click()
+        time.sleep(2)
+        self.driver.find_element(By.XPATH, '//*[@id="popup-content-container"]/div[1]/div[2]/div[12]/div/div/div[2]').click()
+        time.sleep(3)
+        logging.info("Tải meinvoice thành công.")
+
+# Handler: tracuuhoadon.fpt
+class FPTInvoiceHandler(BaseInvoiceHandler):
+    def input_data(self):
+        wait = WebDriverWait(self.driver, 10)
+        input_mst = wait.until(EC.presence_of_element_located((By.XPATH, '/html/body/div[3]/div/div/div[3]/div/div[1]/div/div[2]/div/input')))
+        input_mst.clear()
+        input_mst.send_keys(self.masothue)
+
+        input_ma = wait.until(EC.presence_of_element_located((By.XPATH, '/html/body/div[3]/div/div/div[3]/div/div[1]/div/div[3]/div/input')))
+        input_ma.clear()
+        input_ma.send_keys(self.ma)
+        logging.info("Đã nhập mã FPT")
+
+    def search(self):
+        self.driver.find_element(By.XPATH, '/html/body/div[3]/div/div/div[3]/div/div[1]/div/div[4]/div[2]/div/button').click()
+        time.sleep(5)
+        logging.info("Tra cứu FPT thành công.")
+
+    def download(self):
+        self.driver.find_element(By.XPATH, '/html/body/div[3]/div/div/div[3]/div/div[1]/div/div[4]/div[2]/div/button').click()
+        time.sleep(3)
+        logging.info("FPT đã tải thành công.")
+
+# Handler: van.ehoadon.vn
+class EHoaDonHandler(BaseInvoiceHandler):
+    def input_data(self):
+        input_element = self.driver.find_element(By.XPATH, '//*[@id="txtInvoiceCode"]')
+        input_element.clear()
+        input_element.send_keys(self.ma)
+        logging.info("Đã nhập mã ehoadon")
+
+    def search(self):
+        self.driver.find_element(By.XPATH, '//*[@id="Button1"]').click()
+        time.sleep(5)
+        logging.info("Tra cứu ehoadon thành công.")
+
+    def download(self):
+        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.ID, "frameViewInvoice")))
+        iframe = self.driver.find_element(By.ID, "frameViewInvoice")
+        self.driver.switch_to.frame(iframe)
+
+        WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.ID, "btnDownload")))
+        self.driver.find_element(By.ID, "btnDownload").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "LinkDownXML").click()
+        time.sleep(3)
+        self.driver.switch_to.default_content()
+        logging.info("Tải ehoadon thành công.")
+
+# Factory để chọn đúng handler
+class InvoiceHandlerFactory:
+    handler_map = {
+        "meinvoice": MeInvoiceHandler,
+        "tracuuhoadon.fpt": FPTInvoiceHandler,
+        "van.ehoadon.vn": EHoaDonHandler
+    }
+
+    @staticmethod
+    def get_handler(driver, ma, masothue, url):
+        for key, handler_class in InvoiceHandlerFactory.handler_map.items():
+            if key in url:
+                return handler_class(driver, ma, masothue, url)
+        logging.warning(f"URL không được hỗ trợ: {url}")
+        return None
+
+# Hàm xuất Excel cuối cùng
+def xu_ly_xuat_output(all_data):
+    folder_path = "E:\\download"
+    output_file = "output.xlsx"
+    rows = []
+
+    for record in all_data:
+        ma = record['Mã tra cứu']
+        masothue = record['Mã số thuế']
+        url = record['URL']
+
+        for filename in os.listdir(folder_path):
+            if filename.endswith(".xml") and ma in filename:
+                with open(os.path.join(folder_path, filename), 'r', encoding='utf-8') as file:
+                    try:
+                        data = xmltodict.parse(file.read())
+                        if 'TDiep' in data:
+                            hdon = data.get('TDiep', {}).get('DLieu', {}).get('HDon', {}).get('DLHDon', {})
+                        elif 'HDon' in data:
+                            hdon = data['HDon']['DLHDon']
+                        else:
+                            raise ValueError("Không tìm thấy cấu trúc HDon trong XML")
+                        ttchung = hdon['TTChung']
+                        nban = hdon['NDHDon']['NBan']
+                        nmua = hdon['NDHDon']['NMua']
+
+                        rows.append({
+                            "Mã số thuế": masothue,
+                            "Mã tra cứu": ma,
+                            "URL": url,
+                            "Số hóa đơn": ttchung.get('SHDon', ''),
+                            "Đơn vị bán hàng": nban.get('Ten', ''),
+                            "Mã số thuế bán": nban.get('MST', ''),
+                            "Địa chỉ bán": nban.get('DChi', ''),
+                            "Số tài khoản bán": nban.get('STKNHang', ''),
+                            "Họ tên người mua hàng": nmua.get('Ten', ''),
+                            "Địa chỉ mua": nmua.get('DChi', ''),
+                            "Mã số thuế mua": nmua.get('MST', '')
+                        })
+                    except Exception as e:
+                        logging.error(f"Lỗi khi xử lý {filename}: {e}")
+
+    if rows:
+        df_new = pd.DataFrame(rows)
+        if os.path.exists(output_file):
+            df_old = pd.read_excel(output_file)
+            df_all = pd.concat([df_old, df_new], ignore_index=True)
         else:
-            logging.warning(f"URL không hỗ trợ: {url}")
-            return False
-        logging.info("Mã đã được nhập.")
-    except Exception as e:
-        logging.error("Lỗi khi nhập mã tra cứu: %s", str(e))
+            df_all = df_new
+        df_all.to_excel(output_file, index=False, engine='openpyxl')
+        logging.info(f"Đã ghi dữ liệu ra {output_file}.")
 
-def xu_ly_tra_cuu(driver, url):
-    try:
-        if "meinvoice" in url:
-            driver.find_element(By.XPATH, '//*[@id="btnSearchInvoice"]').click()
-            time.sleep(5)
-        elif "tracuuhoadon.fpt" in url:
-            driver.find_element(By.XPATH, '/html/body/div[3]/div/div/div[3]/div/div[1]/div/div[4]/div[2]/div/button').click()
-            time.sleep(5)
-        elif "van.ehoadon.vn" in url:
-            driver.find_element(By.XPATH, '//*[@id="Button1"]').click()
-            time.sleep(5)
-        else:
-            logging.warning(f"URL không hỗ trợ: {url}")
-            return False
-        logging.info("Tra cứu thành công.")
-    except Exception as e:
-        logging.error("Tra cứu không thành công: %s", str(e))
-
-def xu_ly_download(driver, url):
-    try:
-        if "meinvoice" in url:
-            time.sleep(5)
-            driver.find_element(By.XPATH, '//*[@id="popup-content-container"]/div[1]/div[2]/div[12]/div/span').click()
-            time.sleep(5)
-            driver.find_element(By.XPATH, '//*[@id="popup-content-container"]/div[1]/div[2]/div[12]/div/div/div[1]').click()
-
-        elif "tracuuhoadon.fpt" in url:
-            try:
-                download_dir = "E:\\download"
-
-                # Click nút tải
-                driver.find_element(By.XPATH, '/html/body/div[3]/div/div/div[3]/div/div[1]/div/div[4]/div[2]/div/button').click()
-                time.sleep(3)
-
-                # Tìm file XML mới nhất
-                import glob
-                xml_files = glob.glob(os.path.join(download_dir, "*.xml"))
-                if not xml_files:
-                    print("Không tìm thấy file XML đã tải.")
-                    exit()
-                xml_file = max(xml_files, key=os.path.getctime)
-
-                # Parse XML
-                tree = ET.parse(xml_file)
-                root = tree.getroot()
-
-                h = root.find(".//DLHDon")
-                tt = h.find("TTChung")
-                nlap = tt.findtext("NLap", "")
-
-                nb = root.find(".//NDHDon/NBan")
-                nm = root.find(".//NDHDon/NMua")
-                ten_ban = nb.findtext("Ten", "")
-                ten_mua = nm.findtext("Ten", "")
-
-                items_html = ""
-                for hv in root.findall(".//NDHDon/DSHHDVu/HHDVu"):
-                    ten = hv.findtext("THHDVu", "")
-                    sl = hv.findtext("SLuong", "")
-                    dg = hv.findtext("DGia", "")
-                    ttien = hv.findtext("ThTien", "")
-                    items_html += f"<tr><td>{ten}</td><td>{sl}</td><td>{dg}</td><td>{ttien}</td></tr>"
-
-                tt_toan = root.find(".//TToan")
-                tong_chu = tt_toan.findtext("TgTTTBChu", "")
-
-                html_tmpl = """
-                <html><body>
-                <h2>HÓA ĐƠN ĐIỆN TỬ</h2>
-                <p><b>Người bán:</b> {{ ten_ban }}</p>
-                <p><b>Người mua:</b> {{ ten_mua }}</p>
-                <p><b>Ngày lập:</b> {{ nlap }}</p>
-                <table border="1" cellpadding="5" cellspacing="0">
-                <tr><th>Sản phẩm</th><th>SL</th><th>Đơn giá</th><th>Thành tiền</th></tr>
-                {{ items|safe }}
-                </table>
-                <p><b>Tổng bằng chữ:</b> {{ tong_chu }}</p>
-                </body></html>
-                """
-
-                html = Template(html_tmpl).render(
-                    ten_ban=ten_ban, ten_mua=ten_mua,
-                    nlap=nlap, items=items_html, tong_chu=tong_chu
-                )
-
-                # Tên PDF theo file XML
-                pdf_name = os.path.splitext(os.path.basename(xml_file))[0] + ".pdf"
-                pdf_path = os.path.join(download_dir, pdf_name)
-                HTML(string=html).write_pdf(pdf_path)
-                print("✅ Đã tạo PDF:", pdf_path)
-
-            except Exception as e:
-                import traceback
-                logging.error("FPT tải PDF lỗi: %s", traceback.format_exc())
-
-
-        elif "van.ehoadon.vn" in url:
-            try:
-                # Đợi iframe chứa PDF
-                WebDriverWait(driver, 10).until(
-                    EC.presence_of_element_located((By.ID, "frameViewInvoice"))
-                )
-                iframe = driver.find_element(By.ID, "frameViewInvoice")
-                driver.switch_to.frame(iframe)  # Chuyển vào iframe
-                
-                WebDriverWait(driver, 10).until(
-                    EC.element_to_be_clickable((By.ID, "btnDownload"))
-                )
-                download_button = driver.find_element(By.ID, "btnDownload")
-                download_button.click()
-                time.sleep(3)
-                download_button_pdf = driver.find_element(By.ID, "LinkDownPDF")
-                download_button_pdf.click()
-                time.sleep(3)
-
-                driver.switch_to.default_content()  # Quay lại nội dung chính
-            except Exception as e:
-                logging.error("Lỗi khi tải xuống hóa đơn từ van.ehoadon.vn: %s", str(e))
-
-        else:
-            logging.warning(f"URL không hỗ trợ: {url}")
-            return False
-
-        logging.info("Tải xuống hóa đơn thành công.")
-    except Exception as e:
-        logging.error("Lỗi khi tải xuống hóa đơn: %s", str(e))
-
+# Chương trình chính
 def main():
-    logging.info("Bắt đầu quá trình tải xuống hóa đơn.")
     df = pd.read_excel("input.xlsx", dtype={"Mã số thuế": str})
     driver = open_chrome()
+    all_data = []
 
     try:
-        for index, row in df.iterrows():
+        for _, row in df.iterrows():
             masothue = str(row['Mã số thuế']).strip()
             ma = str(row['Mã tra cứu']).strip()
             url = str(row['URL']).strip()
 
             if not ma or not url:
                 continue
-
             if not masothue or masothue.lower() == 'nan':
                 masothue = ""
 
-            logging.info(f"Đang tra cứu mã: {ma}")
-            xu_ly_du_lieu_input(driver, ma, masothue, url)
-            xu_ly_tra_cuu(driver, url)
-            xu_ly_download(driver, url)
-            time.sleep(5)
-
+            logging.info(f"Đang xử lý mã: {ma}")
+            handler = InvoiceHandlerFactory.get_handler(driver, ma, masothue, url)
+            if handler:
+                try:
+                    handler.process()
+                    all_data.append({
+                        "Mã số thuế": masothue,
+                        "Mã tra cứu": ma,
+                        "URL": url
+                    })
+                    time.sleep(2)
+                except Exception as e:
+                    logging.error(f"Lỗi khi xử lý mã {ma}: {e}")
     finally:
         driver.quit()
-        logging.info("Quá trình tải xuống hóa đơn kết thúc.")
+        logging.info("Kết thúc quá trình tải hóa đơn.")
+        xu_ly_xuat_output(all_data)
 
 if __name__ == "__main__":
     main()
