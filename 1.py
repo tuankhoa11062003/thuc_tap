@@ -45,10 +45,6 @@ class BaseInvoiceHandler:
         self.search()
         self.download()
 
-    def input_data(self): pass
-    def search(self): pass
-    def download(self): pass
-
 # Handler: meinvoice.vn
 class MeInvoiceHandler(BaseInvoiceHandler):
     def input_data(self):
